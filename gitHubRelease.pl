@@ -70,9 +70,9 @@ foreach(@gradle_file_lines) {
 
 ###### COMMIT FILES AND PUSH THEM TO REMOTE REPOSITORY ####################################################
 
-#chdir $destinationPath;
-#system "git add *";
-#system "git commit -m $commitMessage";
-#system "git push -u origin master";
+chdir $destinationPath;
+system "git add *";
+system "git commit -m $commitMessage";
+system "git push -u origin master";
 
 
