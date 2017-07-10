@@ -2,7 +2,7 @@
 
 #
 #  File          : gitHubRelease.pl
-#  Last modified : 01/06/17 8:31 PM
+#  Last modified : 07/09/17 8:51 PM
 #
 #  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
 #
@@ -19,6 +19,7 @@ my $home_dir         = $ENV{'HOME'};
 
 my $destinationPath  = $home_dir."/GitHubReleases/$project";
 my $mdFilesPath      = $home_dir."/mdFiles/$project/";
+my $tempDirectory    = $home_dir."/GitHubReleases/.temp";
 
 my $gradle_file      = $home_dir."/AndroidStudioProjects/".$project."/app/build.gradle";
 
@@ -30,17 +31,20 @@ if (not -e $destinationPath) {
 	# Create destination directory
 	!system "mkdir $destinationPath" or die "\nCan't create directory $destinationPath\n\n";
 }
+else { # Save .git directory in a temporary directory to restore later
+	system "mv $destinationPath/.git $tempDirectory";
+}
 
 # If there is no second argument, copy only main application source files
 if(!$include_test) {
 	$originPath = $home_dir."/AndroidStudioProjects/$project/app/src/main/";
-	system "rsync -rutv --force --exclude='drawable*' --exclude='mipmap*' $originPath $destinationPath";
+	system "rsync -rutv --del --force --exclude='.git' --exclude='drawable*' --exclude='mipmap*' $originPath $destinationPath";
 }    
 else {
 	# If second argument is "-t", copy all source files, including tests 
 	if($include_test =~ /-t/) {
 		$originPath = $home_dir."/AndroidStudioProjects/$project/app/src/";
-		system "rsync -rutv --force --exclude='debug' --exclude='release' --exclude='drawable*' --exclude='mipmap*' $originPath $destinationPath";
+		system "rsync -rutv --del --force --exclude='.git' --exclude='debug' --exclude='release' --exclude='drawable*' --exclude='mipmap*' $originPath $destinationPath";
 	}
 	else { # display message of invalid option
 		die "Invalid option: $include_test\n";
@@ -71,7 +75,9 @@ foreach(@gradle_file_lines) {
 ###### COMMIT FILES AND PUSH THEM TO REMOTE REPOSITORY ####################################################
 
 chdir $destinationPath;
+system "mv $tempDirectory/.git $destinationPath"; # restore .git directory
 system "git add *";
+system "git rm *";
 system "git commit -m $commitMessage";
 system "git push -u origin master";
 
