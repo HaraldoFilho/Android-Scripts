@@ -13,13 +13,12 @@
 
 
 my $project          = $ARGV[0];
-my $include_test     = $ARGV[1];
 
 my $home_dir         = $ENV{'HOME'};
 
+my $originPath       = $home_dir."/AndroidStudioProjects/$project/";
 my $destinationPath  = $home_dir."/GitHubReleases/$project";
-my $mdFilesPath      = $home_dir."/mdFiles/$project/";
-my $tempDirectory    = $home_dir."/GitHubReleases/.temp";
+my $mdFilesPath      = $home_dir."/mdFiles/$project";
 
 my $gradle_file      = $home_dir."/AndroidStudioProjects/".$project."/app/build.gradle";
 
@@ -30,31 +29,22 @@ my $gradle_file      = $home_dir."/AndroidStudioProjects/".$project."/app/build.
 if (not -e $destinationPath) {
 	# Create destination directory
 	!system "mkdir $destinationPath" or die "\nCan't create directory $destinationPath\n\n";
+	chdir $destinationPath;
+	system "git init";
 }
-else { # Save .git directory in a temporary directory to restore later
-	system "mv $destinationPath/.git $tempDirectory";
+else { # Remove all files on destination path
+	system "rm -fr $destinationPath/*";
+	chdir $destinationPath;
+	system "git rm -r *"
 }
 
-# If there is no second argument, copy only main application source files
-if(!$include_test) {
-	$originPath = $home_dir."/AndroidStudioProjects/$project/app/src/main/";
-	system "rsync -rutv --del --force --exclude='.git' --exclude='drawable*' --exclude='mipmap*' $originPath $destinationPath";
-}    
-else {
-	# If second argument is "-t", copy all source files, including tests 
-	if($include_test =~ /-t/) {
-		$originPath = $home_dir."/AndroidStudioProjects/$project/app/src/";
-		system "rsync -rutv --del --force --exclude='.git' --exclude='debug' --exclude='release' --exclude='drawable*' --exclude='mipmap*' $originPath $destinationPath";
-	}
-	else { # display message of invalid option
-		die "Invalid option: $include_test\n";
-	}
-}
+# Copy project files
+system "rsync -rutv --del --force --exclude='.git' --exclude='.md' --exclude='debug' --exclude='release' $originPath $destinationPath";
 
 # Check if there are markdown files
 if(-s $mdFilesPath) {
 	# Copy markdown files
-	system "rsync -rutv --force $mdFilesPath $destinationPath";
+	system "cp $mdFilesPath/* $destinationPath";
 }
 
 ###### GET VERSION NAME FROM GRADLE BUILD FILE ############################################################
@@ -75,9 +65,9 @@ foreach(@gradle_file_lines) {
 ###### COMMIT FILES AND PUSH THEM TO REMOTE REPOSITORY ####################################################
 
 chdir $destinationPath;
-system "mv $tempDirectory/.git $destinationPath"; # restore .git directory
-system "git add *";
-system "git rm *";
+system "git add -f *";
+system "git add .gitignore";
+system "git add .idea";
 system "git commit -m $commitMessage";
 system "git push -u origin master";
 
