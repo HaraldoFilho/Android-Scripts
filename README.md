@@ -8,5 +8,4 @@ Used to update the application versions (versionCode and versionName) prior to r
 
 ### [gitHubRelease.pl](https://github.com/mohb-apps/Scripts/blob/master/gitHubRelease.pl)
 
-Used to upload app releases to GitHub. Only the source code is uploaded (drawables, mipmaps and xml files containing API keys are excluded). Additionaly, there is an option to upload the test codes together with the main application code.
-
+Used to upload app releases to GitHub. It copies all the project files from _AndroidStudioProjects_ directory, excluding API string files, commits the changes and upload them to GitHub.

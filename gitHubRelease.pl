@@ -7,7 +7,7 @@
 #  Developer     : Haraldo Albergaria Filho, a.k.a. mohb apps
 #
 #  Description   : Script to upload code of releases to GitHub
-#  Usage         : gitHubRelease.pl <project> [-t]
+#  Usage         : gitHubRelease.pl <project>
 #
 #  --------------------------------------------------------------
 
