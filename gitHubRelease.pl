@@ -70,5 +70,7 @@ system "git add .gitignore";
 system "git add .idea";
 system "git commit -m $commitMessage";
 system "git push -u origin master";
+system "git push -u fork master"; # Updates the fork repository (comment or remove if not necessary)
+
 
 
