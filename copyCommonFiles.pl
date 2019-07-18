@@ -27,7 +27,6 @@ my $javaDestinationPath = $destinationPath."/app/src/main/java/com/apps/mohb/".$
 my $resOriginPath       = $originPath."/app/src/main/res";
 my $resDestinationPath  = $destinationPath."/app/src/main/res";
 
-my $file_manifest       = $destinationPath."/app/src/main/AndroidManifest.xml";
 my $file_java_about     = $javaDestinationPath."/AboutActivity.java";
 my $file_java_constants = $javaDestinationPath."/Constants.java";
 my $file_java_feedback  = $javaDestinationPath."/FeedbackActivity.java";
@@ -49,28 +48,25 @@ my $file_res_about_h8   = $resDestinationPath."/layout-h820dp/activity_about.xml
 
 ###### COPY COMMON FILES TO PROJECT DIRECTORIES ########################################################
 
-system "cp $originPath/app/src/main/AndroidManifest.xml $destinationPath/app/src/main/";
 system "cp -r $javaOriginPath/* $javaDestinationPath";
 system "cp $resOriginPath/values/* $resDestinationPath/values/";
 system "cp -r $resOriginPath/values-pt $resDestinationPath";
-system "cp $resOriginPath/values-v21/* $resDestinationPath/values-v21/";
 system "cp $resOriginPath/drawable/* $resDestinationPath/drawable/";
 system "cp -r $resOriginPath/drawable-hdpi $resDestinationPath";
 system "cp -r $resOriginPath/drawable-mdpi $resDestinationPath";
 system "cp -r $resOriginPath/drawable-xhdpi $resDestinationPath";
 system "cp -r $resOriginPath/drawable-xxhdpi $resDestinationPath";
 system "cp -r $resOriginPath/drawable-xxxhdpi $resDestinationPath";
-system "cp $resOriginPath/menu/* $resDestinationPath/menu/";
 system "cp $resOriginPath/layout/* $resDestinationPath/layout/";
 system "cp -r $resOriginPath/layout-h1000dp $resDestinationPath";
 system "cp -r $resOriginPath/layout-h600dp $resDestinationPath";
 system "cp -r $resOriginPath/layout-h820dp $resDestinationPath";
-
+system "cd $resDestinationPath; mkdir  menu";
+system "cp $resOriginPath/menu/* $resDestinationPath/menu/";
 
 ###### READ DATA FROM FILES ########################################################################################
 
 # Open files for reading
-open FILE_MANIFEST, "$file_manifest" or die "Can't open $file_manifest to read: $!\n";
 open FILE_JAVA_ABOUT, "$file_java_about" or die "Can't open $file_java_about to read: $!\n";
 open FILE_JAVA_CONSTANTS, "$file_java_constants" or die "Can't open $file_java_constants to read: $!\n";
 open FILE_JAVA_FEEDBACK, "$file_java_feedback" or die "Can't open $file_java_feedback to read: $!\n";
@@ -90,7 +86,6 @@ open FILE_RES_ABOUT_H6, "$file_res_about_h6" or die "Can't open $file_res_about_
 open FILE_RES_ABOUT_H8, "$file_res_about_h8" or die "Can't open $file_res_about_h8 to read: $!\n";
 
 # Read files
-my @file_lines_manifest = <FILE_MANIFEST>;
 my @file_lines_java_about = <FILE_JAVA_ABOUT>;
 my @file_lines_java_constants = <FILE_JAVA_CONSTANTS>;
 my @file_lines_java_feedback = <FILE_JAVA_FEEDBACK>;
@@ -110,7 +105,6 @@ my @file_lines_res_about_h6 = <FILE_RES_ABOUT_H6>;
 my @file_lines_res_about_h8 = <FILE_RES_ABOUT_H8>;
 
 # Close files
-close FILE_MANIFEST;
 close FILE_JAVA_ABOUT;
 close FILE_JAVA_CONSTANTS;
 close FILE_JAVA_FEEDBACK;
@@ -133,10 +127,6 @@ close FILE_RES_HTML_ABOUT_H8;
 ###### UPDATE DATA #################################################################################################
 
 # Search for and update
-foreach(@file_lines_manifest) {
-	$_ =~ s/project/$project_lc/;
-	$_ =~ s/Project/$project/;
-}
 foreach(@file_lines_java_about) {
 	$_ =~ s/project/$project_lc/;
 	$_ =~ s/Project/$project/;
@@ -210,7 +200,6 @@ foreach(@file_lines_res_about_h8) {
 ###### WRITE DATA TO FILES #########################################################################################
 
 # Open files for writing
-open FILE_MANIFEST, ">$file_manifest" or die "Can't open $file_manifest to write: $!\n";
 open FILE_JAVA_ABOUT, ">$file_java_about" or die "Can't open $file_java_about to write: $!\n";
 open FILE_JAVA_CONSTANTS, ">$file_java_constants" or die "Can't open $file_java_constants to write: $!\n";
 open FILE_JAVA_FEEDBACK, ">$file_java_feedback" or die "Can't open $file_java_feedback to write: $!\n";
@@ -230,9 +219,6 @@ open FILE_RES_ABOUT_H6, ">$file_res_about_h6" or die "Can't open $file_res_about
 open FILE_RES_ABOUT_H8, ">$file_res_about_h8" or die "Can't open $file_res_about_h8 to write: $!\n";
 
 # Write updated data to files
-foreach(@file_lines_manifest) {
-	print FILE_MANIFEST $_;
-}
 foreach(@file_lines_java_about) {
 	print FILE_JAVA_ABOUT $_;
 }
@@ -287,7 +273,6 @@ foreach(@file_lines_res_about_h8) {
 
 
 # Close files
-close FILE_MANIFEST;
 close FILE_JAVA_ABOUT;
 close FILE_JAVA_CONSTANTS;
 close FILE_JAVA_FEEDBACK;

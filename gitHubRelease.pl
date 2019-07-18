@@ -39,7 +39,7 @@ else { # Remove all files on destination path
 }
 
 # Copy project files
-system "rsync -rutv --del --force --exclude='.git' --exclude='.md' --exclude='debug' --exclude='release' $originPath $destinationPath";
+system "rsync -rutv --del --force --exclude='.git' --exclude='debug' --exclude='release' $originPath $destinationPath";
 
 # Check if there are markdown files
 if(-s $mdFilesPath) {
@@ -71,6 +71,3 @@ system "git add .idea";
 system "git commit -m $commitMessage";
 system "git push -u origin master";
 system "git push -u fork master"; # Updates the fork repository (comment or remove if not necessary)
-
-
-
