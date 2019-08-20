@@ -39,7 +39,7 @@ else { # Remove all files on destination path
 }
 
 # Copy project files
-system "rsync -rutv --del --force --exclude='.git' --exclude='debug' --exclude='release' $originPath $destinationPath";
+system "rsync -rutv --del --force --exclude='.git' --exclude='debug' --exclude='release' --exclude='build' $originPath $destinationPath";
 
 # Check if there are markdown files
 if(-s $mdFilesPath) {
