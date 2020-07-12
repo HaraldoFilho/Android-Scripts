@@ -71,3 +71,4 @@ system "git add .idea";
 system "git commit -m $commitMessage";
 system "git push -u origin master";
 system "git push -u fork master"; # Updates the fork repository (comment or remove if not necessary)
+system "git push -u photo master"; # Updates the 'photo' repository (comment or remove if not necessary)
